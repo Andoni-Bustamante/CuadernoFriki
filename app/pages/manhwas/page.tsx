@@ -21,7 +21,7 @@ export default function ManhwasPage() {
   return (
     <main className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {manhwas.map((m) => (
-        <ManhwaCard key={m.id} Nombre={m.Nombre} Capitulo={m.Capitulo} Imagen={m.Imagen} Dia={m.Dia} />
+        <ManhwaCard key={m.id} id={m.id} Nombre={m.Nombre} Capitulo={m.Capitulo} Imagen={m.Imagen} Dia={m.Dia} />
       ))}
     </main>
   );
