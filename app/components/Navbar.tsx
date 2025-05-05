@@ -9,13 +9,18 @@ export default function Navbar() {
         </Link>
         <ul className="flex space-x-4">
           <li>
-            <Link href="/pages/manhwas" className="hover:text-orange-500">
+            <Link href="/manhwas" className="hover:text-orange-500">
               Manhwas
             </Link>
           </li>
           <li>
-            <Link href="/pages/animes" className="hover:text-orange-500">
+            <Link href="/animes" className="hover:text-orange-500">
               Animes
+            </Link>
+          </li>
+          <li>
+            <Link href="/login" className="hover:text-orange-500">
+              Login
             </Link>
           </li>
         </ul>

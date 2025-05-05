@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase/config"; // Adjusted the import path
-import ManhwaCard from "../../components/ManhwaCard";
+import { db } from "../firebase/config"; // Adjusted the import path
+import ManhwaCard from "../components/ManhwaCard";
 
 export default function ManhwasPage() {
   const [manhwas, setManhwas] = useState<any[]>([]);
