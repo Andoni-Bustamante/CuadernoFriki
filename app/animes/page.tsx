@@ -1,4 +1,9 @@
+"use client";
+import { useAuth } from "../hooks/useAuth";
+
 export default function AnimePage() {
+  useAuth();
+  
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Anime</h2>

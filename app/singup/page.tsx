@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config"; // Importa la configuración de Firebase
 
 export default function SingupPage() {
   const router = useRouter();
@@ -17,9 +19,17 @@ export default function SingupPage() {
       return;
     }
 
-    // Aquí puedes agregar la lógica para registrar al usuario con Firebase u otro servicio
-    console.log("Registrando usuario:", { email, password });
-    router.push("/login"); // Redirige al login después del registro
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Registro exitoso
+        console.log("Usuario registrado:", userCredential.user);
+        router.push("/login"); // Redirige al login después del registro
+      })
+      .catch((error) => {
+        // Error en el registro
+        console.error("Error al registrar usuario:", error);
+        alert("Error al registrar usuario: " + error.message);
+      });
   };
 
   return (
@@ -68,7 +78,6 @@ export default function SingupPage() {
           </div>
           <button
             type="submit"
-            onClick={() => router.push("/login")}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
           >
             Registrarse

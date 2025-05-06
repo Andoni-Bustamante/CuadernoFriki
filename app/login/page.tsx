@@ -1,16 +1,43 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config"; // Importa la configuración de Firebase
 
 export default function LoginPage() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Guardar la UID en localStorage
+      localStorage.setItem("uid", user.uid);
+      localStorage.setItem("email", user.email || "");
+
+      // Actualizar manualmente el estado de UID en el Navbar
+      const event = new Event("storage");
+      window.dispatchEvent(event);
+
+      console.log("Usuario logueado correctamente");
+      router.push("/"); // Redirigir a la página principal después del login
+    } catch (err) {
+      console.error("Error al iniciar sesión:", err);
+      setError("Correo o contraseña incorrectos");
+    }
+  };
 
   return (
     <div className="flex justify-center items-center h-screen text-white">
       <div className="bg-gray-800 p-7 rounded shadow-md w-80 mt-[-300]">
         <h2 className="text-2xl font-bold mb-4 text-center">Iniciar sesión</h2>
-        <form>
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium mb-2">
               Correo electrónico
@@ -19,6 +46,8 @@ export default function LoginPage() {
               type="email"
               id="email"
               placeholder="Ingresa tu correo"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -30,9 +59,12 @@ export default function LoginPage() {
               type="password"
               id="password"
               placeholder="Ingresa tu contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <button
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4"
@@ -41,9 +73,9 @@ export default function LoginPage() {
           </button>
           <h3>
             No tienes cuenta?{" "}
-            <Link href="/singup" className="hover:text-orange-500">
-              Registrate
-            </Link>
+            <a href="/singup" className="hover:text-orange-500">
+              Regístrate
+            </a>
           </h3>
         </form>
       </div>

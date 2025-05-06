@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config"; // Adjusted the import path
 import ManhwaCard from "../components/ManhwaCard";
+import { useAuth } from "../hooks/useAuth";
 
 export default function ManhwasPage() {
+  useAuth();
   const [manhwas, setManhwas] = useState<any[]>([]);
 
   useEffect(() => {
