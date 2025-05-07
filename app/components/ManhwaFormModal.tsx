@@ -1,9 +1,13 @@
+import { deleteDoc, doc } from "firebase/firestore";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import { db } from "../firebase/config";
 
 interface ManhwaFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
+  onDelete: (id: string) => void; // Nueva prop para manejar la eliminación
   initialData?: {
     id?: string;
     Nombre: string;
@@ -17,6 +21,7 @@ export default function ManhwaFormModal({
   isOpen,
   onClose,
   onSubmit,
+  onDelete, // Recibir la nueva prop
   initialData,
 }: ManhwaFormModalProps) {
   const [nombre, setNombre] = useState(initialData?.Nombre || "");
@@ -40,7 +45,6 @@ export default function ManhwaFormModal({
   }, [initialData]);
 
   useEffect(() => {
-    // Validar si la URL de la imagen es válida
     if (imagen) {
       const img = new Image();
       img.src = imagen;
@@ -50,6 +54,34 @@ export default function ManhwaFormModal({
       setIsValidImage(false);
     }
   }, [imagen]);
+
+  const handleDelete = async () => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción no se puede deshacer.",
+      color: "#fff",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      background: "#2b2b2b",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const manhwaRef = doc(db, "Manhwas", initialData?.id || "");
+      await deleteDoc(manhwaRef);
+      Swal.fire("¡Eliminado!", "El manhwa ha sido eliminado correctamente.", "success");
+      onDelete(initialData?.id || ""); // Llamar a la función para actualizar la lista
+      onClose(); // Cerrar el modal después de eliminar
+    } catch (error) {
+      console.error("Error al eliminar el manhwa:", error);
+      Swal.fire("Error", "Hubo un problema al eliminar el manhwa.", "error");
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -147,6 +179,14 @@ export default function ManhwaFormModal({
               {initialData ? "Guardar Cambios" : "Crear"}
             </button>
           </form>
+          {initialData && (
+            <button
+              onClick={handleDelete}
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4"
+            >
+              Eliminar
+            </button>
+          )}
         </div>
         {isValidImage && (
           <div className="w-1/3 flex justify-center items-center">
