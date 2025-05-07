@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 
@@ -8,17 +7,27 @@ interface ManhwaCardProps {
   Capitulo: number;
   Imagen?: string;
   Dia: string;
+  onEdit?: () => void; // Prop para abrir el modal
+  onUpdateChapter: (id: string, newChapter: number) => void; // Prop para actualizar el capítulo en el estado global
 }
 
-export default function ManhwaCard({ id, Nombre, Capitulo, Imagen, Dia }: ManhwaCardProps) {
-  const [currentChapter, setCurrentChapter] = useState(Capitulo); // Estado local para el capítulo
-
+export default function ManhwaCard({
+  id,
+  Nombre,
+  Capitulo,
+  Imagen,
+  Dia,
+  onEdit,
+  onUpdateChapter,
+}: ManhwaCardProps) {
   const updateChapter = async (newChapter: number) => {
     try {
       const manhwaRef = doc(db, "Manhwas", id); // Referencia al documento en Firestore
       await updateDoc(manhwaRef, { Capitulo: newChapter });
-      setCurrentChapter(newChapter); // Actualizar el estado local
       console.log(`Capítulo actualizado a ${newChapter}`);
+
+      // Actualizar el estado global
+      onUpdateChapter(id, newChapter);
     } catch (error) {
       console.error("Error al actualizar el capítulo:", error);
     }
@@ -33,17 +42,22 @@ export default function ManhwaCard({ id, Nombre, Capitulo, Imagen, Dia }: Manhwa
           className="object-cover w-full h-full"
         />
       </div>
-      <h3 className="text-xl font-bold mt-4 text-center">{Nombre}</h3>
-      <p className="text-xl text-gray-400 text-center mt-2">{currentChapter}</p>
+      <h3
+        className="text-xl font-bold mt-4 text-center cursor-pointer hover:text-orange-500"
+        onClick={onEdit} // Llama a la función onEdit al hacer clic
+      >
+        {Nombre}
+      </h3>
+      <p className="text-xl text-gray-400 text-center mt-2">{Capitulo}</p>
       <div className="flex gap-4 mt-4">
         <button
-          onClick={() => updateChapter(currentChapter - 1)} // Retroceder capítulo
+          onClick={() => updateChapter(Capitulo - 1)} // Retroceder capítulo
           className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           ←
         </button>
         <button
-          onClick={() => updateChapter(currentChapter + 1)} // Avanzar capítulo
+          onClick={() => updateChapter(Capitulo + 1)} // Avanzar capítulo
           className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           →
