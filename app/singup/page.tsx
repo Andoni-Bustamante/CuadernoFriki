@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config"; // Importa la configuración de Firebase
+import Swal from "sweetalert2"; // Importa SweetAlert2
 
 export default function SingupPage() {
   const router = useRouter();
@@ -15,26 +16,41 @@ export default function SingupPage() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Las contraseñas no coinciden",
+        confirmButtonColor: "#d33",
+      });
       return;
     }
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Registro exitoso
-        console.log("Usuario registrado:", userCredential.user);
-        router.push("/login"); // Redirige al login después del registro
+        Swal.fire({
+          icon: "success",
+          title: "Registro exitoso",
+          text: "Usuario registrado correctamente",
+          confirmButtonColor: "#3085d6",
+        }).then(() => {
+          router.push("/login"); // Redirige al login después del registro
+        });
       })
       .catch((error) => {
         // Error en el registro
-        console.error("Error al registrar usuario:", error);
-        alert("Error al registrar usuario: " + error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Error al registrar usuario",
+          text: error.message,
+          confirmButtonColor: "#d33",
+        });
       });
   };
 
   return (
     <div className="flex justify-center items-center h-screen text-white">
-      <div className="bg-gray-800 p-6 rounded shadow-md w-80 mt-[-270]">
+      <div className="bg-gray-800 p-6 rounded shadow-md w-80">
         <h2 className="text-2xl font-bold mb-4 text-center">Regístrate</h2>
         <form onSubmit={handleSignup}>
           <div className="mb-4">

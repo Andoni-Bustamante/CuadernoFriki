@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config"; // Importa la configuración de Firebase
+import Swal from "sweetalert2"; // Importa SweetAlert2
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,11 +25,25 @@ export default function LoginPage() {
       const event = new Event("storage");
       window.dispatchEvent(event);
 
-      console.log("Usuario logueado correctamente");
-      router.push("/"); // Redirigir a la página principal después del login
+      // Mostrar mensaje de éxito
+      Swal.fire({
+        icon: "success",
+        title: "Inicio de sesión exitoso",
+        text: "Bienvenido de nuevo",
+        confirmButtonColor: "#3085d6",
+      }).then(() => {
+        router.push("/"); // Redirigir a la página principal después del login
+      });
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
-      setError("Correo o contraseña incorrectos");
+
+      // Mostrar mensaje de error
+      Swal.fire({
+        icon: "error",
+        title: "Error al iniciar sesión",
+        text: "Correo o contraseña incorrectos",
+        confirmButtonColor: "#d33",
+      });
     }
   };
 
@@ -64,7 +78,6 @@ export default function LoginPage() {
               className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <button
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4"

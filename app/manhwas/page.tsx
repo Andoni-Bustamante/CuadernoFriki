@@ -101,7 +101,21 @@ export default function ManhwasPage() {
     );
   };
 
+  // Agrupar manhwas por día
+  const daysOrder = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Sin día"];
 
+  // Agrupar manhwas por día
+  const groupedManhwas = manhwas.reduce((acc: any, manhwa) => {
+    const day = manhwa.Dia || "Sin día";
+    if (!acc[day]) acc[day] = [];
+    acc[day].push(manhwa);
+    return acc;
+  }, {});
+  
+  // Ordenar los días según el orden definido
+  const sortedDays = Object.keys(groupedManhwas).sort(
+    (a, b) => daysOrder.indexOf(a) - daysOrder.indexOf(b)
+  );
 
   return (
     <div className="p-5 relative">
@@ -110,20 +124,25 @@ export default function ManhwasPage() {
       </h1>
       <div className="border-b-2 border-gray-600 mb-6"></div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full mx-auto">
-        {manhwas.map((m) => (
-          <ManhwaCard
-            key={m.id}
-            id={m.id}
-            Nombre={m.Nombre}
-            Capitulo={m.Capitulo}
-            Imagen={m.Imagen}
-            Dia={m.Dia}
-            onEdit={() => handleOpenModal(m)}
-            onUpdateChapter={handleUpdateChapter}
-          />
-        ))}
-      </div>
+      {sortedDays.map((day) => (
+        <div key={day} className="mb-8">
+          <h2 className="text-2xl font-bold text-orange-500 mb-4">{day}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {groupedManhwas[day].map((manhwa: any) => (
+              <ManhwaCard
+                key={manhwa.id}
+                id={manhwa.id}
+                Nombre={manhwa.Nombre}
+                Capitulo={manhwa.Capitulo}
+                Imagen={manhwa.Imagen}
+                Dia={manhwa.Dia}
+                onEdit={() => handleOpenModal(manhwa)}
+                onUpdateChapter={handleUpdateChapter}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
 
       {/* Botón flotante */}
       <Fab

@@ -43,9 +43,15 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-900 text-white p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
+      {uid ? (
         <Link href="/" className="text-xl font-bold hover:text-orange-500">
           Cuaderno Friki
         </Link>
+      ): (
+        <Link href="/login" className="text-xl font-bold hover:text-orange-500">
+          Cuaderno Friki
+        </Link>
+      )}
 
         <ul className="flex space-x-4 items-center">
           {uid ? (
@@ -73,18 +79,14 @@ export default function Navbar() {
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded shadow-lg">
+                    
                     <Link
-                      href="/profile"
+                      onClick={handleLogout}
+                      href="/login"
                       className="block px-4 py-2 text-sm hover:bg-gray-700"
                     >
-                      Perfil
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700"
-                    >
                       Cerrar sesión
-                    </button>
+                    </Link>
                   </div>
                 )}
               </li>
