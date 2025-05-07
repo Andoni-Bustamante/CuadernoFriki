@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, where, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config"; // Ajusta la ruta según tu estructura
 import ManhwaCard from "../components/ManhwaCard";
 import ManhwaFormModal from "../components/ManhwaFormModal";
@@ -104,46 +104,48 @@ export default function ManhwasPage() {
 
 
   return (
-    <div className="p-1 relative">
-    <h1 className="text-5xl font-bold ml-[-25] text-white mb-6">Manhwas</h1>
-    <div className="border-b-2 ml-[-25] mr-[-35] border-gray-600 mb-6"></div>
+    <div className="p-5 relative">
+      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 text-center sm:text-left">
+        Manhwas
+      </h1>
+      <div className="border-b-2 border-gray-600 mb-6"></div>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 ml-[-25] lg:grid-cols-4 gap-20 w-full mx-auto">
-      {manhwas.map((m) => (
-        <ManhwaCard
-          key={m.id}
-          id={m.id}
-          Nombre={m.Nombre}
-          Capitulo={m.Capitulo}
-          Imagen={m.Imagen}
-          Dia={m.Dia}
-          onEdit={() => handleOpenModal(m)}
-          onUpdateChapter={handleUpdateChapter}
-        />
-      ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full mx-auto">
+        {manhwas.map((m) => (
+          <ManhwaCard
+            key={m.id}
+            id={m.id}
+            Nombre={m.Nombre}
+            Capitulo={m.Capitulo}
+            Imagen={m.Imagen}
+            Dia={m.Dia}
+            onEdit={() => handleOpenModal(m)}
+            onUpdateChapter={handleUpdateChapter}
+          />
+        ))}
+      </div>
+
+      {/* Botón flotante */}
+      <Fab
+        color="primary"
+        aria-label="add"
+        onClick={() => handleOpenModal(null)}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+        }}
+      >
+        <AddIcon />
+      </Fab>
+
+      <ManhwaFormModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmit}
+        onDelete={handleDeleteManhwa}
+        initialData={selectedManhwa}
+      />
     </div>
-
-    {/* Botón flotante */}
-    <Fab
-      color="primary"
-      aria-label="add"
-      onClick={() => handleOpenModal(null)}
-      style={{
-        position: "fixed",
-        bottom: "20px",
-        right: "20px",
-      }}
-    >
-      <AddIcon/>
-    </Fab>
-
-    <ManhwaFormModal
-      isOpen={isModalOpen}
-      onClose={handleCloseModal}
-      onSubmit={handleSubmit}
-      onDelete={handleDeleteManhwa}
-      initialData={selectedManhwa}
-    />
-  </div>
   );
 }
