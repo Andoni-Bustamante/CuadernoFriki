@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; // Importar íconos de usuario
+import { AccountCircle } from "@mui/icons-material"; // Importar el ícono de Material-UI
 
 export default function Navbar() {
   const router = useRouter();
@@ -11,13 +12,11 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
-    // Obtener la UID y el email desde localStorage al cargar el componente
     const storedUid = localStorage.getItem("uid");
     const storedEmail = localStorage.getItem("email");
     setUid(storedUid);
     setEmail(storedEmail);
 
-    // Escuchar cambios en localStorage
     const handleStorageChange = () => {
       const updatedUid = localStorage.getItem("uid");
       const updatedEmail = localStorage.getItem("email");
@@ -27,37 +26,28 @@ export default function Navbar() {
 
     window.addEventListener("storage", handleStorageChange);
 
-    // Limpiar el evento al desmontar el componente
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
   const handleLogout = () => {
-    // Eliminar la UID y el email de localStorage
     localStorage.removeItem("uid");
     localStorage.removeItem("email");
-    setIsDropdownOpen(!isDropdownOpen); // Cerrar el dropdown
+    setIsDropdownOpen(false);
     setUid(null);
     setEmail(null);
-    router.push("/login"); // Redirigir al login
+    router.push("/login");
   };
 
   return (
     <nav className="bg-gray-900 text-white p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        {uid ? (
-          <Link href="/" className="text-xl font-bold hover:text-orange-500">
+        <Link href="/" className="text-xl font-bold hover:text-orange-500">
           Cuaderno Friki
-          </Link>
-        ):(
-          <Link href="/login" className="text-xl font-bold hover:text-orange-500">
-          Cuaderno Friki
-          </Link>
-        )
+        </Link>
 
-        }
-        <ul className="flex space-x-4">
+        <ul className="flex space-x-4 items-center">
           {uid ? (
             <>
               <li>
@@ -73,9 +63,13 @@ export default function Navbar() {
               <li className="relative">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="hover:text-orange-500 focus:outline-none"
+                  className="hover:text-orange-500 focus:outline-none flex items-center"
                 >
-                  {email}
+                  {/* Mostrar el ícono en lugar del email en pantallas pequeñas */}
+                  <span className="hidden sm:inline">{email}</span>
+                  <a className="sm:hidden">
+                    <AccountCircle/>
+                  </a>
                 </button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded shadow-lg">
