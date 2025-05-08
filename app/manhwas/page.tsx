@@ -124,25 +124,29 @@ export default function ManhwasPage() {
       </h1>
       <div className="border-b-2 border-gray-500 mb-6"></div>
 
-      {sortedDays.map((day) => (
-        <div key={day} className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-4">{day}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {groupedManhwas[day].map((manhwa: any) => (
-              <ManhwaCard
-                key={manhwa.id}
-                id={manhwa.id}
-                Nombre={manhwa.Nombre}
-                Capitulo={manhwa.Capitulo}
-                Imagen={manhwa.Imagen}
-                Dia={manhwa.Dia}
-                onEdit={() => handleOpenModal(manhwa)}
-                onUpdateChapter={handleUpdateChapter}
-              />
-            ))}
+      {manhwas.length === 0 ? (
+        <p className="text-center text-gray-400 text-xl">Sin registros</p>
+      ) : (
+        sortedDays.map((day) => (
+          <div key={day} className="mb-8">
+            <h2 className="text-3xl font-bold text-white mb-4">{day}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {groupedManhwas[day].map((manhwa: any) => (
+                <ManhwaCard
+                  key={manhwa.id}
+                  id={manhwa.id}
+                  Nombre={manhwa.Nombre}
+                  Capitulo={manhwa.Capitulo}
+                  Imagen={manhwa.Imagen}
+                  Dia={manhwa.Dia}
+                  onEdit={() => handleOpenModal(manhwa)}
+                  onUpdateChapter={handleUpdateChapter}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
 
       {/* Botón flotante */}
       <Fab

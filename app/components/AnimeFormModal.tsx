@@ -3,29 +3,29 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { db } from "../firebase/config";
 
-interface ManhwaFormModalProps {
+interface AnimeFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
-  onDelete: (id: string) => void; // Nueva prop para manejar la eliminación
+  onDelete: (id: string) => void;
   initialData?: {
     id?: string;
     Nombre: string;
-    Capitulo: number;
+    Episodio: number;
     Imagen?: string;
     Dia: string;
   };
 }
 
-export default function ManhwaFormModal({
+export default function AnimeFormModal({
   isOpen,
   onClose,
   onSubmit,
-  onDelete, // Recibir la nueva prop
+  onDelete,
   initialData,
-}: ManhwaFormModalProps) {
+}: AnimeFormModalProps) {
   const [nombre, setNombre] = useState(initialData?.Nombre || "");
-  const [capitulo, setCapitulo] = useState(initialData?.Capitulo || 0);
+  const [episodio, setEpisodio] = useState(initialData?.Episodio || 0);
   const [imagen, setImagen] = useState(initialData?.Imagen || "");
   const [dia, setDia] = useState(initialData?.Dia || "");
   const [isValidImage, setIsValidImage] = useState(false);
@@ -33,12 +33,12 @@ export default function ManhwaFormModal({
   useEffect(() => {
     if (initialData) {
       setNombre(initialData.Nombre);
-      setCapitulo(initialData.Capitulo);
+      setEpisodio(initialData.Episodio);
       setImagen(initialData.Imagen || "");
       setDia(initialData.Dia);
     } else {
       setNombre("");
-      setCapitulo(0);
+      setEpisodio(0);
       setImagen("");
       setDia("");
     }
@@ -72,14 +72,14 @@ export default function ManhwaFormModal({
     if (!result.isConfirmed) return;
 
     try {
-      const manhwaRef = doc(db, "Manhwas", initialData?.id || "");
-      await deleteDoc(manhwaRef);
-      Swal.fire("¡Eliminado!", "El manhwa ha sido eliminado correctamente.", "success");
-      onDelete(initialData?.id || ""); // Llamar a la función para actualizar la lista
-      onClose(); // Cerrar el modal después de eliminar
+      const animeRef = doc(db, "Animes", initialData?.id || "");
+      await deleteDoc(animeRef);
+      Swal.fire("¡Eliminado!", "El anime ha sido eliminado correctamente.", "success");
+      onDelete(initialData?.id || "");
+      onClose();
     } catch (error) {
-      console.error("Error al eliminar el manhwa:", error);
-      Swal.fire("Error", "Hubo un problema al eliminar el manhwa.", "error");
+      console.error("Error al eliminar el anime:", error);
+      Swal.fire("Error", "Hubo un problema al eliminar el anime.", "error");
     }
   };
 
@@ -96,7 +96,7 @@ export default function ManhwaFormModal({
         </button>
         <div className="w-full sm:w-2/3 pr-0 sm:pr-4">
           <h2 className="text-xl font-bold mb-4 text-center sm:text-left">
-            {initialData ? "Editar Manhwa" : "Crear Manhwa"}
+            {initialData ? "Editar Anime" : "Crear Anime"}
           </h2>
           <form
             onSubmit={(e) => {
@@ -104,12 +104,12 @@ export default function ManhwaFormModal({
               onSubmit({
                 id: initialData?.id,
                 Nombre: nombre,
-                Capitulo: capitulo,
+                Episodio: episodio,
                 Imagen: imagen,
                 Dia: dia,
               });
               setNombre("");
-              setCapitulo(0);
+              setEpisodio(0);
               setImagen("");
               setDia("");
             }}
@@ -127,14 +127,14 @@ export default function ManhwaFormModal({
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="capitulo" className="block text-sm font-medium mb-2">
-                Capítulo
+              <label htmlFor="episodio" className="block text-sm font-medium mb-2">
+                Episodio
               </label>
               <input
                 type="number"
-                id="capitulo"
-                value={capitulo}
-                onChange={(e) => setCapitulo(Number(e.target.value))}
+                id="episodio"
+                value={episodio}
+                onChange={(e) => setEpisodio(Number(e.target.value))}
                 className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="0"
               />
@@ -210,7 +210,7 @@ export default function ManhwaFormModal({
             <div className="border rounded-lg shadow-md text-white w-70 h-72">
               <div className="w-full h-full flex justify-center items-center overflow-hidden">
                 <img
-                  src="../default.png"
+                  src="../animeDefault.png"
                   alt="Previsualización"
                   className="object-cover w-full h-full rounded-lg"
                 />
