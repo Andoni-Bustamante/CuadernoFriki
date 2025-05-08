@@ -49,7 +49,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex justify-center items-center h-screen text-white">
-      <div className="bg-gray-800 p-7 rounded shadow-md w-80 mt-[-300]">
+      <div className="bg-blue-900 p-7 rounded shadow-md w-80 mt-[-300]">
         <h2 className="text-2xl font-bold mb-4 text-center">Iniciar sesión</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
@@ -62,7 +62,7 @@ export default function LoginPage() {
               placeholder="Ingresa tu correo"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -75,18 +75,18 @@ export default function LoginPage() {
               placeholder="Ingresa tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4"
+            className="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4"
           >
             Iniciar sesión
           </button>
           <h3>
             No tienes cuenta?{" "}
-            <a href="/singup" className="hover:text-orange-500">
+            <a href="/singup" className="hover:text-blue-300">
               Regístrate
             </a>
           </h3>

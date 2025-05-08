@@ -57,7 +57,7 @@ export default function HomePage() {
     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 text-center sm:text-left">
       Manhwas del {getTodayDay()}
     </h1>
-    <div className="border-b-2 border-gray-600 mb-6"></div>
+    <div className="border-b-2 border-gray-500 mb-6"></div>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full mx-auto">
           {manhwas.map((m) => (

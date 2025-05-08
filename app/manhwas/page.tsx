@@ -122,11 +122,11 @@ export default function ManhwasPage() {
       <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 text-center sm:text-left">
         Manhwas
       </h1>
-      <div className="border-b-2 border-gray-600 mb-6"></div>
+      <div className="border-b-2 border-gray-500 mb-6"></div>
 
       {sortedDays.map((day) => (
         <div key={day} className="mb-8">
-          <h2 className="text-2xl font-bold text-orange-500 mb-4">{day}</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">{day}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {groupedManhwas[day].map((manhwa: any) => (
               <ManhwaCard

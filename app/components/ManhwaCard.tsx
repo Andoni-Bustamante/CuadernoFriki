@@ -38,7 +38,7 @@ export default function ManhwaCard({
   };
 
   return (
-    <div className="border border-stone-400 rounded-lg p-4 shadow-md flex flex-col items-center bg-red-950 text-white w-full sm:w-64">
+    <div className="border border-stone-400 rounded-lg p-4 shadow-md flex flex-col items-center bg-blue-900 text-white w-full sm:w-64">
       <div className="w-full h-80 sm:h-80 flex justify-center items-center overflow-hidden">
         <img
           src={Imagen || "../default.png"} // Imagen por defecto si no hay imagen
@@ -47,24 +47,24 @@ export default function ManhwaCard({
         />
       </div>
       <h3
-        className="text-lg sm:text-xl font-bold mt-4 text-center cursor-pointer hover:text-red-400 truncate w-full"
+        className="text-lg sm:text-xl font-bold mt-4 text-center cursor-pointer hover:text-blue-300 truncate w-full"
         onClick={onEdit} // Llama a la función onEdit al hacer clic
         title={Nombre} // Mostrar el nombre completo al pasar el cursor
       >
         {Nombre}
       </h3>
-      <p className="text-lg sm:text-xl text-gray-400 text-center mt-2">{Capitulo}</p>
+      <p className="text-lg sm:text-xl text-gray-300 text-center mt-2">{Capitulo}</p>
       <div className="flex gap-2 sm:gap-4 mt-4">
         <IconButton
           onClick={() => updateChapter(Capitulo - 1)} // Retroceder capítulo
-          color="error"
+          color="primary"
           size="large"
         >
           <ArrowBackIcon fontSize="inherit"/>
         </IconButton>
         <IconButton
           onClick={() => updateChapter(Capitulo + 1)} // Avanzar capítulo
-          color="error"
+          color="primary"
           size="large"
         >
           <ArrowForwardIcon fontSize="inherit"/>

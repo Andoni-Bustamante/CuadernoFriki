@@ -86,8 +86,8 @@ export default function ManhwaFormModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-gray-800 text-white p-6 rounded shadow-lg w-[600px] relative flex">
+    <div className="fixed inset-0 bg-black/70 bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-blue-900 text-white p-6 rounded shadow-lg w-[600px] relative flex">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-400 hover:text-white"
@@ -119,7 +119,7 @@ export default function ManhwaFormModal({
                 id="nombre"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
-                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div className="mb-4">
@@ -131,7 +131,7 @@ export default function ManhwaFormModal({
                 id="capitulo"
                 value={capitulo}
                 onChange={(e) => setCapitulo(Number(e.target.value))}
-                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="0"
               />
             </div>
@@ -144,7 +144,7 @@ export default function ManhwaFormModal({
                 id="imagen"
                 value={imagen}
                 onChange={(e) => setImagen(e.target.value)}
-                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {!isValidImage && imagen && (
                 <p className="text-red-500 text-sm mt-2">
@@ -160,7 +160,7 @@ export default function ManhwaFormModal({
                 id="dia"
                 value={dia}
                 onChange={(e) => setDia(e.target.value)}
-                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Selecciona un día</option>
                 <option value="Lunes">Lunes</option>
@@ -174,7 +174,7 @@ export default function ManhwaFormModal({
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              className="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded "
             >
               {initialData ? "Guardar Cambios" : "Crear"}
             </button>
@@ -182,25 +182,38 @@ export default function ManhwaFormModal({
           {initialData && (
             <button
               onClick={handleDelete}
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4"
+              className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded mt-4"
             >
               Eliminar
             </button>
           )}
         </div>
         {isValidImage && (
-          <div className="w-1/3 flex justify-center items-center">
-            <div className="border rounded-lg p-4 shadow-md bg-gray-800 text-white w-64">
-              <div className="w-full h-56 flex justify-center items-center overflow-hidden">
+          <div className="w-1/3 flex justify-center items-center mb-9 ml-5">
+            <div className="border rounded-lg shadow-md text-white w-70">
+              <div className="w-full h-72 flex justify-center items-center overflow-hidden">
                 <img
                   src={imagen}
                   alt="Previsualización"
-                  className="object-cover w-full h-full"
+                  className="object-cover w-full h-full rounded-lg"
                 />
               </div>
             </div>
           </div>
         )}
+        {!isValidImage && (
+                <div className="w-1/3 flex justify-center items-center mb-9 ml-5">
+                <div className="border rounded-lg shadow-md text-white w-70">
+                  <div className="w-full h-72 flex justify-center items-center overflow-hidden">
+                    <img
+                      src="../default.png"
+                      alt="Previsualización"
+                      className="object-cover w-full h-full rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+          )}
       </div>
     </div>
   );

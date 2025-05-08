@@ -50,7 +50,7 @@ export default function SingupPage() {
 
   return (
     <div className="flex justify-center items-center h-screen text-white">
-      <div className="bg-gray-800 p-6 rounded shadow-md w-80">
+      <div className="bg-blue-900 p-6 rounded shadow-md w-80  mt-[-270]">
         <h2 className="text-2xl font-bold mb-4 text-center">Regístrate</h2>
         <form onSubmit={handleSignup}>
           <div className="mb-4">
@@ -63,7 +63,7 @@ export default function SingupPage() {
               placeholder="Ingresa tu correo"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -76,7 +76,7 @@ export default function SingupPage() {
               placeholder="Ingresa tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -89,12 +89,12 @@ export default function SingupPage() {
               placeholder="Repite tu contraseña"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            className="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
           >
             Registrarse
           </button>
