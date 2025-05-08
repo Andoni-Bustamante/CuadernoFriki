@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "start": "npm run dev",
-    "firebaseDeploy": "npm run build && firebase deploy"
+    "firebaseDeploy": "npm run build && firebase deploy",
+    "dev": "next dev --turbopack",
+    "build": "next build"
+    
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

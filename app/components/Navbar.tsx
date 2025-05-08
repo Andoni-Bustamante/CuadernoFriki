@@ -41,14 +41,14 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-900 text-white p-4 shadow-md">
+    <nav className=" text-white p-4 shadow-md" style={{ backgroundColor: "#520000" }}>
       <div className="container mx-auto flex justify-between items-center">
       {uid ? (
-        <Link href="/" className="text-xl font-bold hover:text-orange-500">
+        <Link href="/" className="text-xl font-bold hover:text-red-400">
           Cuaderno Friki
         </Link>
       ): (
-        <Link href="/login" className="text-xl font-bold hover:text-orange-500">
+        <Link href="/login" className="text-xl font-bold hover:text-red-400">
           Cuaderno Friki
         </Link>
       )}
@@ -57,19 +57,19 @@ export default function Navbar() {
           {uid ? (
             <>
               <li>
-                <Link href="/manhwas" className="hover:text-orange-500">
+                <Link href="/manhwas" className="hover:text-red-400">
                   Manhwas
                 </Link>
               </li>
               <li>
-                <Link href="/animes" className="hover:text-orange-500">
+                <Link href="/animes" className="hover:text-red-400">
                   Animes
                 </Link>
               </li>
               <li className="relative">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="hover:text-orange-500 focus:outline-none flex items-center"
+                  className="hover:text-red-400 focus:outline-none flex items-center"
                 >
                   {/* Mostrar el ícono en lugar del email en pantallas pequeñas */}
                   <span className="hidden sm:inline">{email}</span>
@@ -78,12 +78,12 @@ export default function Navbar() {
                   </a>
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded shadow-lg">
+                  <div className="absolute right-0 mt-2 w-48 rounded shadow-lg" style={{ backgroundColor: "#520000" }}>
                     
                     <Link
                       onClick={handleLogout}
                       href="/login"
-                      className="block px-4 py-2 text-sm hover:bg-gray-700"
+                      className="block px-4 py-2 text-sm hover:bg-red-900"
                     >
                       Cerrar sesión
                     </Link>
@@ -93,7 +93,7 @@ export default function Navbar() {
             </>
           ) : (
             <li>
-              <Link href="/login" className="hover:text-orange-500">
+              <Link href="/login" className="hover:text-red-400">
                 Login
               </Link>
             </li>

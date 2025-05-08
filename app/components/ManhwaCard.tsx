@@ -1,5 +1,9 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { IconButton } from "@mui/material"; // Importar IconButton de Material-UI
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"; // Icono de flecha izquierda
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"; // Icono de flecha derecha
+
 
 interface ManhwaCardProps {
   id: string; // ID de Firestore
@@ -34,16 +38,16 @@ export default function ManhwaCard({
   };
 
   return (
-    <div className="border rounded-lg p-4 shadow-md flex flex-col items-center bg-gray-800 text-white w-full sm:w-64">
+    <div className="border border-stone-400 rounded-lg p-4 shadow-md flex flex-col items-center bg-red-950 text-white w-full sm:w-64">
       <div className="w-full h-80 sm:h-80 flex justify-center items-center overflow-hidden">
         <img
           src={Imagen || "../default.png"} // Imagen por defecto si no hay imagen
           alt={Nombre}
-          className="object-cover w-full h-full"
+          className="border border-stone-400 rounded-lg object-cover w-full h-full"
         />
       </div>
       <h3
-        className="text-lg sm:text-xl font-bold mt-4 text-center cursor-pointer hover:text-orange-500 truncate w-full"
+        className="text-lg sm:text-xl font-bold mt-4 text-center cursor-pointer hover:text-red-400 truncate w-full"
         onClick={onEdit} // Llama a la función onEdit al hacer clic
         title={Nombre} // Mostrar el nombre completo al pasar el cursor
       >
@@ -51,18 +55,20 @@ export default function ManhwaCard({
       </h3>
       <p className="text-lg sm:text-xl text-gray-400 text-center mt-2">{Capitulo}</p>
       <div className="flex gap-2 sm:gap-4 mt-4">
-        <button
+        <IconButton
           onClick={() => updateChapter(Capitulo - 1)} // Retroceder capítulo
-          className="px-2 sm:px-3 py-0.5 sm:py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xl sm:text-2xl"
+          color="error"
+          size="large"
         >
-          ←
-        </button>
-        <button
+          <ArrowBackIcon fontSize="inherit"/>
+        </IconButton>
+        <IconButton
           onClick={() => updateChapter(Capitulo + 1)} // Avanzar capítulo
-          className="px-2 sm:px-3 py-0.5 sm:py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xl sm:text-2xl"
+          color="error"
+          size="large"
         >
-          →
-        </button>
+          <ArrowForwardIcon fontSize="inherit"/>
+        </IconButton>
       </div>
     </div>
   );
