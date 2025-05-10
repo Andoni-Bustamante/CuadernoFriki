@@ -6,34 +6,34 @@ import { db } from "../firebase/config"; // Ajusta la ruta según tu estructura
 import AnimeCard from "../components/AnimeCard";
 import AnimeFormModal from "../components/AnimeFormModal";
 import { useAuth } from "../hooks/useAuth";
-import { Fab } from "@mui/material";
+import { SpeedDial, SpeedDialAction } from "@mui/material"; // Importar SpeedDial y SpeedDialAction
 import AddIcon from "@mui/icons-material/Add";
+import CreateIcon from "@mui/icons-material/Create";
+import ImportExportIcon from "@mui/icons-material/ImportExport";
+import ImportModal from "../components/ImportModal";
 
 export default function AnimePage() {
   useAuth();
   const [animes, setAnimes] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAnime, setSelectedAnime] = useState<any | null>(null);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
+  const fetchAnimes = async () => {
+    const uid = localStorage.getItem("uid");
+    if (!uid) return;
+
+    try {
+      const animesQuery = query(collection(db, "Animes"), where("User", "==", uid));
+      const snapshot = await getDocs(animesQuery);
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setAnimes(data);
+    } catch (error) {
+      console.error("Error al obtener los animes:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchAnimes = async () => {
-      const uid = localStorage.getItem("uid"); // Obtener la UID desde localStorage
-      if (!uid) {
-        console.error("No hay UID en localStorage");
-        return;
-      }
-
-      try {
-        // Crear una consulta para filtrar por el campo "user"
-        const animesQuery = query(collection(db, "Animes"), where("User", "==", uid));
-        const snapshot = await getDocs(animesQuery);
-        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setAnimes(data);
-      } catch (error) {
-        console.error("Error al obtener los animes:", error);
-      }
-    };
-
     fetchAnimes();
   }, []);
 
@@ -52,7 +52,7 @@ export default function AnimePage() {
   };
 
   const handleSubmit = async (data: any) => {
-    const uid = localStorage.getItem("uid"); // Obtener la UID del usuario logueado
+    const uid = localStorage.getItem("uid");
     if (!uid) {
       console.error("No hay UID en localStorage");
       return;
@@ -76,18 +76,14 @@ export default function AnimePage() {
           Episodio: data.Episodio,
           Imagen: data.Imagen,
           Dia: data.Dia,
-          User: uid, // Asociar el anime al usuario logueado
+          User: uid,
         });
         console.log("Anime creado correctamente");
       }
 
       // Actualizar la lista de animes después de la inserción/actualización
-      const animesQuery = query(collection(db, "Animes"), where("User", "==", uid));
-      const snapshot = await getDocs(animesQuery);
-      const updatedAnimes = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setAnimes(updatedAnimes);
-
-      handleCloseModal(); // Cerrar el modal
+      fetchAnimes();
+      handleCloseModal();
     } catch (error) {
       console.error("Error al guardar el anime:", error);
     }
@@ -99,6 +95,14 @@ export default function AnimePage() {
         anime.id === id ? { ...anime, Episodio: newEpisode } : anime
       )
     );
+  };
+
+  const handleOpenImportModal = () => {
+    setIsImportModalOpen(true);
+  };
+
+  const handleCloseImportModal = () => {
+    setIsImportModalOpen(false);
   };
 
   // Agrupar animes por día
@@ -147,19 +151,28 @@ export default function AnimePage() {
         ))
       )}
 
-      {/* Botón flotante */}
-      <Fab
-        color="primary"
-        aria-label="add"
-        onClick={() => handleOpenModal(null)}
-        style={{
+      {/* Botón flotante con SpeedDial */}
+      <SpeedDial
+        ariaLabel="Opciones"
+        icon={<AddIcon />}
+        direction="up"
+        sx={{
           position: "fixed",
-          bottom: "20px",
-          right: "20px",
+          bottom: 20,
+          right: 20,
         }}
       >
-        <AddIcon />
-      </Fab>
+        <SpeedDialAction
+          icon={<CreateIcon />}
+          tooltipTitle="Nuevo registro"
+          onClick={() => handleOpenModal(null)}
+        />
+        <SpeedDialAction
+          icon={<ImportExportIcon />}
+          tooltipTitle="Importar"
+          onClick={handleOpenImportModal}
+        />
+      </SpeedDial>
 
       <AnimeFormModal
         isOpen={isModalOpen}
@@ -167,6 +180,13 @@ export default function AnimePage() {
         onSubmit={handleSubmit}
         onDelete={handleDeleteAnime}
         initialData={selectedAnime}
+      />
+
+      <ImportModal
+        isOpen={isImportModalOpen}
+        onClose={handleCloseImportModal}
+        type="Anime"
+        onImportSuccess={fetchAnimes}
       />
     </div>
   );

@@ -30,6 +30,8 @@ export default function LoginPage() {
         icon: "success",
         title: "Inicio de sesión exitoso",
         text: "Bienvenido de nuevo",
+        background: "#193cb8",
+        color: "#fff",
         confirmButtonColor: "#3085d6",
       }).then(() => {
         router.push("/"); // Redirigir a la página principal después del login
@@ -42,6 +44,8 @@ export default function LoginPage() {
         icon: "error",
         title: "Error al iniciar sesión",
         text: "Correo o contraseña incorrectos",
+        background: "#193cb8",
+        color: "#fff",
         confirmButtonColor: "#d33",
       });
     }

@@ -33,6 +33,8 @@ export default function SingupPage() {
           title: "Registro exitoso",
           text: "Usuario registrado correctamente",
           confirmButtonColor: "#3085d6",
+          background: "#193cb8",
+        color: "#fff",
         }).then(() => {
           router.push("/login"); // Redirige al login después del registro
         });
@@ -44,6 +46,8 @@ export default function SingupPage() {
           title: "Error al registrar usuario",
           text: error.message,
           confirmButtonColor: "#d33",
+          background: "#193cb8",
+        color: "#fff",
         });
       });
   };
