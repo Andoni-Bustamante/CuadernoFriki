@@ -6,6 +6,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward"; // Icono de fle
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"; // Icono de copiar
 import Swal from "sweetalert2"; // Importar SweetAlert2
 import "sweetalert2/dist/sweetalert2.min.css"; // Importar estilos de SweetAlert2
+import NumberFlow from "@number-flow/react";
 
 interface ManhwaCardProps {
   id: string; // ID de Firestore
@@ -60,6 +61,9 @@ export default function ManhwaCard({
         <img
           src={Imagen || "../default.png"} // Imagen por defecto si no hay imagen
           alt={Nombre}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "../default.png"; // Cambiar a imagen por defecto si falla
+          }}
           className="border border-stone-400 rounded-lg object-cover w-full h-full"
         />
       </div>
@@ -70,7 +74,7 @@ export default function ManhwaCard({
       >
         {Nombre}
       </h3>
-      <p className="text-lg sm:text-xl text-gray-300 text-center mt-2">{Capitulo}</p>
+      <NumberFlow className="text-lg sm:text-xl text-gray-300 text-center mt-2" value={Capitulo} trend={0} format={{ notation: "compact" }} />
       <div className="flex gap-2 sm:gap-4 mt-4">
         <IconButton
           onClick={() => updateChapter(Capitulo - 1)} // Retroceder capítulo
