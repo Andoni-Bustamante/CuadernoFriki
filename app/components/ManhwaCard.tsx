@@ -5,7 +5,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack"; // Icono de flecha iz
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"; // Icono de flecha derecha
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"; // Icono de copiar
 import Swal from "sweetalert2"; // Importar SweetAlert2
-import "sweetalert2/dist/sweetalert2.min.css"; // Importar estilos de SweetAlert2
+//import "sweetalert2/dist/sweetalert2.min.css"; // Importar estilos de SweetAlert2
 import NumberFlow from "@number-flow/react";
 
 interface ManhwaCardProps {
@@ -74,7 +74,7 @@ export default function ManhwaCard({
       >
         {Nombre}
       </h3>
-      <NumberFlow className="text-lg sm:text-xl text-gray-300 text-center mt-2" value={Capitulo} trend={0} format={{ notation: "compact" }} />
+      <NumberFlow className="text-lg sm:text-xl text-gray-300 text-center mt-2" value={Capitulo} trend={0} format={{ style: "decimal" }} />
       <div className="flex gap-2 sm:gap-4 mt-4">
         <IconButton
           onClick={() => updateChapter(Capitulo - 1)} // Retroceder capítulo
