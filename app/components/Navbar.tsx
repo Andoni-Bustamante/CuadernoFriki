@@ -61,11 +61,6 @@ export default function Navbar() {
                   Manhwas
                 </Link>
               </li>
-              <li>
-                <Link href="/animes" className="hover:text-blue-300">
-                  Animes
-                </Link>
-              </li>
               <li className="relative">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}

@@ -6,11 +6,11 @@ import Swal from "sweetalert2";
 interface ImportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  type: "Manhwa" | "Anime"; // Determina si es para Manhwas o Animes
+  type?: string; // Deprecated, kept for compatibility
   onImportSuccess: () => void; // Callback para actualizar la lista después de importar
 }
 
-export default function ImportModal({ isOpen, onClose, type, onImportSuccess }: ImportModalProps) {
+export default function ImportModal({ isOpen, onClose, onImportSuccess }: ImportModalProps) {
   const [id, setId] = useState("");
 
   const handleImport = async () => {
@@ -30,13 +30,13 @@ export default function ImportModal({ isOpen, onClose, type, onImportSuccess }: 
 
     try {
       // Buscar el registro en Firestore
-      const docRef = doc(db, type === "Manhwa" ? "Manhwas" : "Animes", id);
+      const docRef = doc(db, "Manhwas", id);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
         Swal.fire({
           title: "Error",
-          text: `No se encontró ningún ${type.toLowerCase()} con esa ID.`,
+          text: "No se encontró ningún manhwa con esa ID.",
           icon: "error",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Aceptar",
@@ -52,7 +52,7 @@ export default function ImportModal({ isOpen, onClose, type, onImportSuccess }: 
       if (data.User === uid) {
         Swal.fire({
           title: "Información",
-          text: `Este ${type.toLowerCase()} ya te pertenece.`,
+          text: "Este manhwa ya te pertenece.",
           icon: "info",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "Aceptar",
@@ -62,23 +62,19 @@ export default function ImportModal({ isOpen, onClose, type, onImportSuccess }: 
         return;
       }
 
-      // Crear un nuevo registro con el User actualizado y el capítulo/episodio reiniciado
+      // Crear un nuevo registro con el User actualizado
       const newData = {
         ...data,
         User: uid,
       };
+      
+      delete (newData as { [key: string]: any })["Episodio"]; // Eliminar el campo Episodio si existe
 
-      if (type === "Manhwa") {
-        delete (newData as { [key: string]: any })["Episodio"]; // Eliminar el campo Episodio si existe
-      } else if (type === "Anime") {
-        delete (newData as { [key: string]: any })["Capitulo"];
-      }
-
-      await addDoc(collection(db, type === "Manhwa" ? "Manhwas" : "Animes"), newData);
+      await addDoc(collection(db, "Manhwas"), newData);
 
       Swal.fire({
         title: "¡Éxito!",
-        text: `${type} importado correctamente.`,
+        text: "Manhwa importado correctamente.",
         icon: "success",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "Aceptar",
@@ -115,7 +111,7 @@ export default function ImportModal({ isOpen, onClose, type, onImportSuccess }: 
           ✕
         </button>
         <h2 className="text-xl font-bold mb-4 text-center">
-          Importar {type}
+          Importar Manhwa
         </h2>
         <form
           onSubmit={(e) => {
@@ -125,7 +121,7 @@ export default function ImportModal({ isOpen, onClose, type, onImportSuccess }: 
         >
           <div className="mb-4">
             <label htmlFor="id" className="block text-sm font-medium mb-2">
-              ID del {type}
+              ID del Manhwa
             </label>
             <input
               type="text"
@@ -133,7 +129,7 @@ export default function ImportModal({ isOpen, onClose, type, onImportSuccess }: 
               value={id}
               onChange={(e) => setId(e.target.value)}
               className="w-full p-2 rounded bg-blue-950 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder={`Ingresa la ID del ${type.toLowerCase()}`}
+              placeholder="Ingresa la ID del manhwa"
             />
           </div>
           <button

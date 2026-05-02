@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, where, addDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/config"; // Ajusta la ruta según tu estructura
+import { db } from "../firebase/config";
 import ManhwaCard from "../components/ManhwaCard";
 import ManhwaFormModal from "../components/ManhwaFormModal";
 import { useAuth } from "../hooks/useAuth";
-import { SpeedDial, SpeedDialAction } from "@mui/material"; // Importar SpeedDial y SpeedDialAction
-import AddIcon from '@mui/icons-material/Add';
+import { SpeedDial, SpeedDialAction } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import CreateIcon from "@mui/icons-material/Create";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import ImportModal from "../components/ImportModal";
@@ -17,14 +17,13 @@ export default function ManhwasPage() {
   const [manhwas, setManhwas] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedManhwa, setSelectedManhwa] = useState<any | null>(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const [importType, setImportType] = useState<"Manhwa" | "Anime">("Manhwa");
+  const [expandedDays, setExpandedDays] = useState<{ [key: string]: boolean }>({});
 
   const fetchManhwas = async () => {
     const uid = localStorage.getItem("uid");
     if (!uid) return;
-  
+
     try {
       const manhwasQuery = query(collection(db, "Manhwas"), where("User", "==", uid));
       const snapshot = await getDocs(manhwasQuery);
@@ -34,10 +33,26 @@ export default function ManhwasPage() {
       console.error("Error al obtener los manhwas:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchManhwas();
   }, []);
+
+  useEffect(() => {
+    const daysOrder = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Sin día"];
+    const groupedManhwas = manhwas.reduce((acc: any, manhwa) => {
+      const day = manhwa.Dia || "Sin día";
+      if (!acc[day]) acc[day] = [];
+      acc[day].push(manhwa);
+      return acc;
+    }, {});
+
+    const initialExpanded: { [key: string]: boolean } = {};
+    Object.keys(groupedManhwas).forEach((day) => {
+      initialExpanded[day] = day !== "Sin día";
+    });
+    setExpandedDays(initialExpanded);
+  }, [manhwas]);
 
   const handleOpenModal = (manhwa: any | null = null) => {
     setSelectedManhwa(manhwa);
@@ -54,7 +69,7 @@ export default function ManhwasPage() {
   };
 
   const handleSubmit = async (data: any) => {
-    const uid = localStorage.getItem("uid"); // Obtener la UID del usuario logueado
+    const uid = localStorage.getItem("uid");
     if (!uid) {
       console.error("No hay UID en localStorage");
       return;
@@ -62,7 +77,6 @@ export default function ManhwasPage() {
 
     try {
       if (data.id) {
-        // Si hay un ID, actualizamos el documento existente
         const manhwaRef = doc(db, "Manhwas", data.id);
         await updateDoc(manhwaRef, {
           Nombre: data.Nombre,
@@ -70,26 +84,22 @@ export default function ManhwasPage() {
           Imagen: data.Imagen,
           Dia: data.Dia,
         });
-        console.log("Manhwa actualizado correctamente");
       } else {
-        // Si no hay ID, creamos un nuevo documento
         await addDoc(collection(db, "Manhwas"), {
           Nombre: data.Nombre,
           Capitulo: data.Capitulo,
           Imagen: data.Imagen,
           Dia: data.Dia,
-          User: uid, // Asociar el manhwa al usuario logueado
+          User: uid,
         });
-        console.log("Manhwa creado correctamente");
       }
 
-      // Actualizar la lista de manhwas después de la inserción/actualización
       const manhwasQuery = query(collection(db, "Manhwas"), where("User", "==", uid));
       const snapshot = await getDocs(manhwasQuery);
       const updatedManhwas = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setManhwas(updatedManhwas);
 
-      handleCloseModal(); // Cerrar el modal
+      handleCloseModal();
     } catch (error) {
       console.error("Error al guardar el manhwa:", error);
     }
@@ -104,11 +114,10 @@ export default function ManhwasPage() {
   };
 
   const handleNewRecord = () => {
-    handleOpenModal(null); // Abrir el modal para un nuevo registro
+    handleOpenModal(null);
   };
 
-  const handleOpenImportModal = (type: "Manhwa" | "Anime") => {
-    setImportType(type);
+  const handleOpenImportModal = () => {
     setIsImportModalOpen(true);
   };
 
@@ -116,18 +125,22 @@ export default function ManhwasPage() {
     setIsImportModalOpen(false);
   };
 
-  // Agrupar manhwas por día
+  const toggleDay = (day: string) => {
+    setExpandedDays((prev) => ({
+      ...prev,
+      [day]: !prev[day],
+    }));
+  };
+
   const daysOrder = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo", "Sin día"];
 
-  // Agrupar manhwas por día
   const groupedManhwas = manhwas.reduce((acc: any, manhwa) => {
     const day = manhwa.Dia || "Sin día";
     if (!acc[day]) acc[day] = [];
     acc[day].push(manhwa);
     return acc;
   }, {});
-  
-  // Ordenar los días según el orden definido
+
   const sortedDays = Object.keys(groupedManhwas).sort(
     (a, b) => daysOrder.indexOf(a) - daysOrder.indexOf(b)
   );
@@ -144,26 +157,35 @@ export default function ManhwasPage() {
       ) : (
         sortedDays.map((day) => (
           <div key={day} className="mb-8">
-            <h2 className="text-3xl font-bold text-white mb-4">{day}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {groupedManhwas[day].map((manhwa: any) => (
-                <ManhwaCard
-                  key={manhwa.id}
-                  id={manhwa.id}
-                  Nombre={manhwa.Nombre}
-                  Capitulo={manhwa.Capitulo}
-                  Imagen={manhwa.Imagen}
-                  Dia={manhwa.Dia}
-                  onEdit={() => handleOpenModal(manhwa)}
-                  onUpdateChapter={handleUpdateChapter}
-                />
-              ))}
-            </div>
+            <button
+              onClick={() => toggleDay(day)}
+              className="w-full text-left flex items-center justify-between p-4 border-b border-gray-600 hover:opacity-80 transition-opacity mb-4"
+            >
+              <h2 className="text-3xl font-bold text-white">{day}</h2>
+              <span className="text-white text-2xl">
+                {expandedDays[day] ? "▼" : "▶"}
+              </span>
+            </button>
+            {expandedDays[day] && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {groupedManhwas[day].map((manhwa: any) => (
+                  <ManhwaCard
+                    key={manhwa.id}
+                    id={manhwa.id}
+                    Nombre={manhwa.Nombre}
+                    Capitulo={manhwa.Capitulo}
+                    Imagen={manhwa.Imagen}
+                    Dia={manhwa.Dia}
+                    onEdit={() => handleOpenModal(manhwa)}
+                    onUpdateChapter={handleUpdateChapter}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ))
       )}
 
-      {/* Botón flotante con SpeedDial */}
       <SpeedDial
         ariaLabel="Opciones"
         icon={<AddIcon />}
@@ -182,7 +204,7 @@ export default function ManhwasPage() {
         <SpeedDialAction
           icon={<ImportExportIcon />}
           tooltipTitle="Importar"
-          onClick={() => handleOpenImportModal("Manhwa")}
+          onClick={handleOpenImportModal}
         />
       </SpeedDial>
 
@@ -197,7 +219,6 @@ export default function ManhwasPage() {
       <ImportModal
         isOpen={isImportModalOpen}
         onClose={handleCloseImportModal}
-        type="Manhwa"
         onImportSuccess={fetchManhwas}
       />
     </div>
